@@ -1,0 +1,12 @@
+== Description of Contents ==
+
+app
+  Holds all the code of PPC project.
+
+doc
+  This directory is where PPC documentation will be stored.
+
+test
+  Unit and functional tests.
+
+
