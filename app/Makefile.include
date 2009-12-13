@@ -1,0 +1,46 @@
+# компилятор для языка С++
+GPP = g++
+# компилятор для языка C
+GCC = gcc -std=c99
+
+# флаги используемые при компилировании
+CFLAGS = -Wall -g
+
+# флаги библиотек используемых при компилировании
+LFLAGS = 
+ 
+# директории с библиотеками проекта
+MSIUNET_DIR = net
+MSIUERROR_DIR = error
+MSIUTHREAD_DIR = thread
+
+# имя директории сервера  
+SERVER_DIR = server
+
+# директория с заголовочными файлами
+INCLUDE_DIR=$(TOP_DIR)/src
+
+# директория исполняемых файлов
+BIN_DIR = $(TOP_DIR)/bin
+# директория объектных файлов
+OBJ_DIR = $(TOP_DIR)/obj
+# директория с исходниками
+SRC_DIR = $(TOP_DIR)/src
+
+# исполняемый файл сервера
+SERVER_PROG = $(BIN_DIR)/server
+
+#
+SERVER_SRC_DIR = $(SRC_DIR)/$(SERVER_DIR)
+MSIUERROR_SRC_DIR = $(SRC_DIR)/$(MSIUERROR_DIR)
+MSIUNET_SRC_DIR = $(SRC_DIR)/$(MSIUNET_DIR)
+MSIUTHREAD_SRC_DIR = $(SRC_DIR)/$(MSIUTHREAD_DIR)
+#
+SERVER_OBJ_DIR = $(OBJ_DIR)/$(SERVER_DIR)
+MSIUERROR_OBJ_DIR = $(OBJ_DIR)/$(MSIUERROR_DIR)
+MSIUNET_OBJ_DIR = $(OBJ_DIR)/$(MSIUNET_DIR)
+MSIUTHREAD_OBJ_DIR = $(OBJ_DIR)/$(MSIUTHREAD_DIR)
+
+DECO_L = "      [32m---=( "
+DECO_R = " )=---[0m"
+
