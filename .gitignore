@@ -2,4 +2,4 @@
 *.log
 *.o
 *.so
-./bin/*
+app/bin/*
