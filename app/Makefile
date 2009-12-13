@@ -26,7 +26,7 @@ $(SERVER_PROG): server-lib
 	@echo $(DECO_L) Making server $(DECO_R)
 	$(GPP) $(SERVER_OBJ_DIR)/*.o $(LFLAGS) -o $@
 
-server-lib: net-lib error-lib
+server-lib: stack-compiler-lib net-lib error-lib
 	@echo
 	@echo $(DECO_L) Making server library $(DECO_R)
 	cd $(SERVER_SRC_DIR); $(MAKE) $(MFLAGS)
@@ -45,6 +45,11 @@ error-lib:
 	@echo
 	@echo $(DECO_L) Making MSIU error library $(DECO_R)
 	cd $(MSIUERROR_SRC_DIR); $(MAKE) $(MFLAGS)
+	
+stack-compiler-lib:
+	@echo
+	@echo $(DECO_L) Making Stack Compiler library $(DECO_R)
+	cd $(STACK_COMPILER_SRC_DIR); $(MAKE) $(MFLAGS)
 
 clean:
 	@echo
