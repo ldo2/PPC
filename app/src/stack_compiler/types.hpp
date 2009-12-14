@@ -2,16 +2,6 @@
 #define _SC_TYPES_HPP_
 
 namespace StackCompiler {
-
-  enum OperatorAssociativity;
-  enum OperatorType;
-  
-  enum NumberType;
-  
-  enum SymbolType;
-  enum CharType;
-  
-  enum BracketType;
   
   enum OperatorAssociativity {
     LEFT,
@@ -38,19 +28,15 @@ namespace StackCompiler {
   };
   
   enum CharType {
-    LEFT_ROUND  = '(',
-    RIGHT_ROUND = ')',
-    LEFT_SQUARE = '[',
-    RIGHT_SQUARE = ']',
-    LEFT_CURLY = '{',
-    RIGHT_CURLY = '}',
-    SEPARATOR = ',',
-    STRING_BRACKET = '\"',
-    OPERATOR,
-    LETTER,
-    DIGIT,
-    SPACE,
-    OTHER
+    OPEN_BRACKET_CHAR,
+    CLOSE_BRACKET_CHAR,
+    SEPARATOR_CHAR,
+    STRING_BRACKET_CHAR,
+    OPERATOR_CHAR,
+    LETTER_CHAR,
+    DIGIT_CHAR,
+    SPACE_CHAR,
+    OTHER_CHAR
   };
   
   enum SymbolType {

@@ -10,6 +10,25 @@ using std::string;
 
 namespace StackCompiler {
 
+  class ISymbol {
+    protected:
+      ISymbol(SymbolType _type);
+    
+      SymbolType type;
+      string str;
+      
+    public:
+      ISymbol();
+      
+      virtual ~ISymbol(void);
+      
+      SymbolType getType(void);
+      string& getString(void);
+      
+      virtual bool canAppendChar(char c);
+      virtual void appendChar(char c);
+  };
+
   class NumberSymbol : public ISymbol {
     protected:
       NumberSymbol(SymbolType _type);
@@ -32,10 +51,14 @@ namespace StackCompiler {
     protected:
       FunctionSymbol(SymbolType _type);
 
+      int argumentCount;
     public:
       FunctionSymbol();
       
       virtual bool canAppendChar(char c);
+      
+      int getArgumentCount(void);
+      void addArgument(void);
   };
   
   class OperatorSymbol : public ISymbol {
@@ -43,9 +66,15 @@ namespace StackCompiler {
       OperatorSymbol(SymbolType _type);
 
     public:
+      /* there are no good to use this public fields *WALL* */
+      long priority;
+      OperatorAssociativity associativity;
+    
       OperatorSymbol();
       
       virtual bool canAppendChar(char c);
+      
+      friend bool operator<<(const OperatorSymbol& a, const OperatorSymbol& b);
   };
   
   class BracketSymbol : public ISymbol {
@@ -53,6 +82,7 @@ namespace StackCompiler {
       BracketSymbol(SymbolType _type);
 
       BracketType bracketType;
+      bool isOpen;
     public:
       BracketSymbol();
       BracketSymbol(char c);
@@ -60,6 +90,11 @@ namespace StackCompiler {
       
       virtual bool canAppendChar(char c);
       virtual void appendChar(char c);
+      
+      BracketType getBracketType(void);
+      bool getIsOpen(void);
+      
+      bool isCloseFor(BracketSymbol *b);
   };
 
 };

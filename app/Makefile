@@ -18,6 +18,7 @@ make-subdirs:
 	mkdir -p $(MSIUNET_OBJ_DIR)
 	mkdir -p $(MSIUERROR_OBJ_DIR)
 	mkdir -p $(MSIUTHREAD_OBJ_DIR)
+	mkdir -p $(STACK_COMPILER_OBJ_DIR)
 
 server: $(SERVER_PROG)
 

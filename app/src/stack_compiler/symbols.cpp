@@ -17,7 +17,7 @@ namespace StackCompiler {
     return type;
   }
   
-  string ISymbol::getString(void) {
+  string& ISymbol::getString(void) {
     return str;
   }
   
@@ -38,7 +38,7 @@ namespace StackCompiler {
   NumberSymbol::NumberSymbol() : ISymbol(NUMBER) {}
       
   bool NumberSymbol::canAppendChar(char c) {
-    return Compiler.charType(c) == DIGIT;
+    return Compiler::charType(c) == DIGIT_CHAR;
   }
 
  /*
@@ -51,11 +51,19 @@ namespace StackCompiler {
   
   FunctionSymbol::FunctionSymbol(SymbolType _type) : ISymbol(_type) {}
 
-  FunctionSymbol::FunctionSymbol() : ISymbol(NUMBER) {}
+  FunctionSymbol::FunctionSymbol() : ISymbol(FUNCTION), argumentCount(0) {}
       
   bool FunctionSymbol::canAppendChar(char c) {
-    CharType ct = Compiler.charType(c)
-    return ct == LETTER || ct == DIGIT;
+    CharType ct = Compiler::charType(c);
+    return ct == LETTER_CHAR || ct == DIGIT_CHAR;
+  }
+
+  int FunctionSymbol::getArgumentCount(void) {
+    return argumentCount;
+  }
+  
+  void FunctionSymbol::addArgument(void) {
+    argumentCount += 1;
   }
 
  /*
@@ -71,7 +79,15 @@ namespace StackCompiler {
   OperatorSymbol::OperatorSymbol() : ISymbol(OPERATOR)  {}
       
   bool OperatorSymbol::canAppendChar(char c) {
-    return Compiler.charType(c) == OPERATOR;
+    return Compiler::charType(c) == OPERATOR_CHAR;
+  }
+
+  bool operator<<(const OperatorSymbol& a, const OperatorSymbol& b) {
+    if(a.associativity == NON && b.associativity == NON ) {
+      // throw exception here
+    }
+    return (b.associativity == LEFT && a.priority <= b.priority) || 
+            (b.associativity == RIGHT && a.priority < b.priority);
   }
 
  /*
@@ -86,21 +102,28 @@ namespace StackCompiler {
   BracketSymbol::BracketSymbol(SymbolType _type) : ISymbol(_type) {}
 
 
-  BracketSymbol::BracketSymbol() : ISymbol(BRACKET), bracketType(ROUND) {}
+  BracketSymbol::BracketSymbol() : ISymbol(BRACKET), bracketType(ROUND), isOpen(true) {}
   
-  BracketSymbol::BracketSymbol(char c) : ISymbol(BRACKET), bracketType(ROUND) {
-    switch(Compiler.charType(c)) {
-      case LEFT_ROUND:
-        bt = ROUND;
+  BracketSymbol::BracketSymbol(char c) : ISymbol(BRACKET), bracketType(ROUND), isOpen(false) {
+    switch(c) {
+      case '(':
+        isOpen = true;
+      case ')':
+        bracketType = ROUND;
         break;
-      case LEFT_SQUARE:
-        bt = SQUARE;
+      case '[':
+        isOpen = true;
+      case ']':
+        bracketType = SQUARE;
         break;
-      case LEFT_CURLY:
-        bt = CURLY;
+      case '{':
+        isOpen = true;
+      case '}':
+        bracketType = CURLY;
         break;
       default:
         /* throw some error here ! */
+        ;
     }
   }
   
@@ -113,6 +136,21 @@ namespace StackCompiler {
   
   void BracketSymbol::appendChar(char c) {
     /* throw some error here ! */
+  }
+  
+  BracketType BracketSymbol::getBracketType(void) {
+    return bracketType;
+  }
+  
+  bool BracketSymbol::getIsOpen(void) {
+    return isOpen;
+  }
+  
+  bool BracketSymbol::isCloseFor(BracketSymbol *b) {
+    if(b ==  NULL) {
+      return false;
+    }
+    return !isOpen && b->getIsOpen() && bracketType == b->getBracketType();
   }
 
  /*

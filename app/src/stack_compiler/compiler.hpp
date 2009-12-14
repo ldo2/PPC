@@ -4,20 +4,14 @@
 #include <stack>
 #include <string>
 
+#include <stack_compiler/sc_preheader.hpp>
 #include <stack_compiler/types.hpp>
+#include <stack_compiler/symbols.hpp>
 
 using std::stack;
 using std::string;
 
 namespace StackCompiler {
-  
-  class Compiler;
-  
-  class ISymbol;
-  class IExpression;
-  
-  class ISymbolDBAdapter;
-  class IExpressionFactory;
 
   class Compiler {
     public: 
@@ -32,37 +26,28 @@ namespace StackCompiler {
       stack<IExpression *> exprStack;
       
       ISymbol *currentSymbol;
-      int charIndex;
+      unsigned int charIndex;
       
       ISymbolDBAdapter& symbolDBAdapter;
       IExpressionFactory& exprFactory;
       
       void processCharacter(char c);
       
+      void processCurrentSymbol(void);
+      bool processInCurrentSymbol(char c);
+      
+      void processOpenBracket(char c);
+      void processCloseBracket(char c);
+      
+      void processArgSeparator(char c);
+      
       void processSuspendedSymbols(void);
       
+      void executeSymbol(ISymbol *sym);
+      void executeFunction(FunctionSymbol *sym);
+      void executeOperator(OperatorSymbol *sym);
+      
   };
-
-
-  class ISymbol {
-    protected:
-      ISymbol(SymbolType _type);
-    
-      SymbolType type;
-      string str;
-      
-    public:
-      ISymbol();
-      
-      virtual ~ISymbol(void);
-      
-      SymbolType getType(void);
-      string getString(void);
-      
-      virtual bool canAppendChar(char c);
-      virtual void appendChar(char c);
-  };
-  
   
   class IExpression {
     public:
@@ -83,13 +68,13 @@ namespace StackCompiler {
   
   class IExpressionFactory {
     public:
-      virtual IExpression *createExpression(ISymbol *sym);
+      virtual IExpression *createExpression(ISymbol sym);
       
-      virtual IExpression *createUnitaryOperator(ISymbol *sym, IExpression *child);
-      virtual IExpression *createBinaryOperator(ISymbol *sym, IExpression *left, IExpression *right);
+      virtual IExpression *createUnitaryOperator(ISymbol sym, IExpression *child);
+      virtual IExpression *createBinaryOperator(ISymbol sym, IExpression *left, IExpression *right);
       
-      virtual IExpression *createFunction(ISymbol *sym, BracketType bt);
-      // virtual IExpression *createFunction(ISymbol *sym, BracketType bt, int argc, IExpression args[]);
+      virtual IExpression *createFunction(ISymbol sym);
+      // virtual IExpression *createFunction(ISymbol sym, int argc, IExpression args[]);
       
       virtual void reverseAddSubExpression(IExpression *parent, IExpression *child);
   };
