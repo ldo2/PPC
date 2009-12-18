@@ -20,16 +20,20 @@ namespace StackCompiler {
   IExpression *Compiler::compile(string& str) {
     currentSymbol = NULL;
     //charIndex = -1;
+    IExpression *result;
     
-    //processCharacter('(');
+    processCharacter('(');
     
     for (charIndex = 0; charIndex < str.length(); ++charIndex) {
       processCharacter(str[charIndex]);
     }
     
-    //processCharacter(')');
+    processCharacter(')');
     
-    return NULL;
+    result = exprStack.top();
+    exprStack.pop();
+    
+    return result;
   }
     
     
@@ -167,7 +171,7 @@ namespace StackCompiler {
   }
   
   void Compiler::processOpenBracket(char c) {
-    if(symbolStack.top()->getType() != FUNCTION) {
+    if(symbolStack.empty() || symbolStack.top()->getType() != FUNCTION) {
       symbolStack.push(new FunctionSymbol());
     }
     
@@ -190,6 +194,10 @@ namespace StackCompiler {
     
     if(bs.isCloseFor(dynamic_cast<BracketSymbol *>(symbolStack.top()))) {
       symbolStack.pop();
+      if(symbolStack.empty()) {
+        // idioto !!!
+        throw 23;
+      }
       if(hasArg) {
         dynamic_cast<FunctionSymbol *>(symbolStack.top())->getArgumentCount();
       }
@@ -283,6 +291,54 @@ namespace StackCompiler {
  /*
   * end of Compiler class
   */
+  
+  
+ /*
+  * interface IExpression
+  */
+
+  IExpression::IExpression(void) {}
+  IExpression::~IExpression(void) {}
+  
+ /*
+  * end of IExpression interface
+  */
+  
+  ISymbolDBAdapter::ISymbolDBAdapter(void) {}
+  
+  bool ISymbolDBAdapter::isOperator(string& oper) {
+    return true;
+  }
+  
+  bool ISymbolDBAdapter::isFunction(string& func) {
+    return true;
+  }
+      
+  long  ISymbolDBAdapter::getPriority(string& oper) {
+    return 0;
+  }
+  
+  OperatorAssociativity  ISymbolDBAdapter::getAssociativity(string& oper) {
+    return LEFT;
+  }
+  
+
+  IExpression *IExpressionFactory::createExpression(ISymbol sym) {
+    return NULL;
+  }
+      
+  IExpression *IExpressionFactory::createUnitaryOperator(ISymbol sym, IExpression *child) {
+    return NULL;
+  }
+  IExpression *IExpressionFactory::createBinaryOperator(ISymbol sym, IExpression *left, IExpression *right) {
+    return NULL;
+  }
+      
+  IExpression *IExpressionFactory::createFunction(ISymbol sym) {
+    return NULL;
+  }
+      
+  void IExpressionFactory::reverseAddSubExpression(IExpression *parent, IExpression *child) {}
 
 }; 
 

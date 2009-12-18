@@ -21,6 +21,10 @@ namespace StackCompiler {
     return str;
   }
   
+  bool ISymbol::canAppendChar(char c) {
+    return false;
+  }
+  
   void ISymbol::appendChar(char c) {
     str += c; 
   }

@@ -58,6 +58,8 @@ namespace StackCompiler {
   
   class ISymbolDBAdapter {
     public:
+      ISymbolDBAdapter(void);
+      
       virtual bool isOperator(string& oper);
       virtual bool isFunction(string& func);
       
