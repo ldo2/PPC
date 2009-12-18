@@ -16,6 +16,8 @@ MSIUTHREAD_DIR = thread
 
 STACK_COMPILER_DIR = stack_compiler
 
+SC_EXAMPLE_DIR = compiler_example
+
 # имя директории сервера  
 SERVER_DIR = server
 
@@ -32,6 +34,8 @@ SRC_DIR = $(TOP_DIR)/src
 # исполняемый файл сервера
 SERVER_PROG = $(BIN_DIR)/server
 
+SC_EXAMPLE_PROG = $(BIN_DIR)/compiler_example
+
 #
 SERVER_SRC_DIR = $(SRC_DIR)/$(SERVER_DIR)
 
@@ -41,6 +45,8 @@ MSIUTHREAD_SRC_DIR = $(SRC_DIR)/$(MSIUTHREAD_DIR)
 
 STACK_COMPILER_SRC_DIR = $(SRC_DIR)/$(STACK_COMPILER_DIR)
 
+SC_EXAMPLE_SRC_DIR = $(SRC_DIR)/$(SC_EXAMPLE_DIR)
+
 #
 SERVER_OBJ_DIR = $(OBJ_DIR)/$(SERVER_DIR)
 
@@ -49,6 +55,10 @@ MSIUNET_OBJ_DIR = $(OBJ_DIR)/$(MSIUNET_DIR)
 MSIUTHREAD_OBJ_DIR = $(OBJ_DIR)/$(MSIUTHREAD_DIR)
 
 STACK_COMPILER_OBJ_DIR = $(OBJ_DIR)/$(STACK_COMPILER_DIR)
+
+SC_EXAMPLE_OBJ_DIR = $(OBJ_DIR)/$(SC_EXAMPLE_DIR)
+
+
 
 DECO_L = "      [32m---=( "
 DECO_R = " )=---[0m"

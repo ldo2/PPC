@@ -6,7 +6,7 @@ include $(TOP_DIR)/Makefile.include
 
 default: all
 
-all: make-subdirs server
+all: make-subdirs server $(SC_EXAMPLE_PROG)
 
 make-subdirs:
 	@echo
@@ -19,6 +19,7 @@ make-subdirs:
 	mkdir -p $(MSIUERROR_OBJ_DIR)
 	mkdir -p $(MSIUTHREAD_OBJ_DIR)
 	mkdir -p $(STACK_COMPILER_OBJ_DIR)
+	mkdir -p $(SC_EXAMPLE_OBJ_DIR)
 
 server: $(SERVER_PROG)
 
@@ -26,6 +27,11 @@ $(SERVER_PROG): server-lib
 	@echo
 	@echo $(DECO_L) Making server $(DECO_R)
 	$(GPP) $(SERVER_OBJ_DIR)/*.o $(LFLAGS) -o $@
+	
+$(SC_EXAMPLE_PROG): stack-compiler-lib sc-example-lib error-lib
+	@echo
+	@echo $(DECO_L) Making stack compiler example $(DECO_R)
+	$(GPP) $(SC_EXAMPLE_OBJ_DIR)/*.o $(STACK_COMPILER_OBJ_DIR)/*.o $(LFLAGS) -o $@
 
 server-lib: stack-compiler-lib net-lib error-lib
 	@echo
@@ -51,6 +57,11 @@ stack-compiler-lib:
 	@echo
 	@echo $(DECO_L) Making Stack Compiler library $(DECO_R)
 	cd $(STACK_COMPILER_SRC_DIR); $(MAKE) $(MFLAGS)
+
+sc-example-lib:
+	@echo
+	@echo $(DECO_L) Making Stack Compiler examples $(DECO_R)
+	cd $(SC_EXAMPLE_SRC_DIR); $(MAKE) $(MFLAGS)
 
 clean:
 	@echo
