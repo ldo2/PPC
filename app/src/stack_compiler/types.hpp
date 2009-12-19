@@ -10,8 +10,9 @@ namespace StackCompiler {
   };
   
   enum OperatorType {
-    UNITARY = 1,
-    BINARY = 2
+    UNARY_PREFIX,
+    UNARY_POSTFIX,
+    BINARY
   };
   
   enum NumberType {

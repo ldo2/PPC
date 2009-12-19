@@ -69,10 +69,13 @@ namespace StackCompiler {
       /* there are no good to use this public fields *WALL* */
       long priority;
       OperatorAssociativity associativity;
+      OperatorType operatorType;
     
       OperatorSymbol();
       
       virtual bool canAppendChar(char c);
+      
+      void addArgument(void);
       
       friend bool operator<<(const OperatorSymbol& a, const OperatorSymbol& b);
   };

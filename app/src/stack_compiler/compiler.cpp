@@ -1,6 +1,5 @@
 #include <stack_compiler/compiler.hpp>
 
-
 #include <cctype>
 
 #include <stack_compiler/types.hpp>
@@ -19,7 +18,9 @@ namespace StackCompiler {
       
   IExpression *Compiler::compile(string& str) {
     currentSymbol = NULL;
-    //charIndex = -1;
+    prevSymbolType = UNDEFINED;
+    charIndex = -1;
+    
     IExpression *result;
     
     processCharacter('(');
@@ -36,10 +37,7 @@ namespace StackCompiler {
     return result;
   }
     
-    
-  /*
-   * Следующая функция реализована очень плохо, ее надо исправить. 
-   */   
+      
   CharType Compiler::charType(char c) {
     switch(c) {
       case '(':
@@ -101,6 +99,7 @@ namespace StackCompiler {
         break;
       case CLOSE_BRACKET_CHAR:
         processCloseBracket(c);
+        prevSymbolType = UNDEFINED; /* use hack here */
         break;
       case SEPARATOR_CHAR:
         processArgSeparator(c);
@@ -109,8 +108,7 @@ namespace StackCompiler {
         /* not support now */
         break;
       case OPERATOR_CHAR:
-        currentSymbol = new OperatorSymbol();
-        currentSymbol->appendChar(c);
+        processOperator(c);
         break;
       case LETTER_CHAR:
         currentSymbol = new FunctionSymbol();
@@ -152,11 +150,7 @@ namespace StackCompiler {
         symbolStack.push(currentSymbol);
         break;
       case OPERATOR:
-        /* refactor to autoupdate */
-        dynamic_cast<OperatorSymbol *>(currentSymbol)->priority = symbolDBAdapter.getPriority(currentSymbol->getString());
-        dynamic_cast<OperatorSymbol *>(currentSymbol)->associativity = symbolDBAdapter.getAssociativity(currentSymbol->getString());
-        processSuspendedSymbols();
-        symbolStack.push(currentSymbol);
+        pushOperator();
         break;
       case NUMBER:
       case STRING:
@@ -167,6 +161,7 @@ namespace StackCompiler {
         break;
     }
     
+    prevSymbolType = currentSymbol->getType();
     currentSymbol = NULL;
   }
   
@@ -180,10 +175,8 @@ namespace StackCompiler {
   
   void Compiler::processCloseBracket(char c) {
     BracketSymbol bs(c);
-    bool hasArg = false;
 
     while(!symbolStack.empty() && symbolStack.top()->getType() != BRACKET) {
-      hasArg = true;
       executeSymbol(symbolStack.top());
       symbolStack.pop();
     }
@@ -194,16 +187,11 @@ namespace StackCompiler {
     
     if(bs.isCloseFor(dynamic_cast<BracketSymbol *>(symbolStack.top()))) {
       symbolStack.pop();
-      if(symbolStack.empty()) {
-        // idioto !!!
-        throw 23;
-      }
-      if(hasArg) {
-        dynamic_cast<FunctionSymbol *>(symbolStack.top())->getArgumentCount();
-      }
+      
       /* execute function */
       executeSymbol(symbolStack.top());
       symbolStack.pop();
+      
     } else {
       // throw exception here, wronb brackets !!!
     }
@@ -212,6 +200,7 @@ namespace StackCompiler {
       
   void Compiler::processArgSeparator(char c) {
     ISymbol *bracket;
+    
     while(!symbolStack.empty() && symbolStack.top()->getType() != BRACKET) {
       executeSymbol(symbolStack.top());
       symbolStack.pop();
@@ -223,33 +212,57 @@ namespace StackCompiler {
     
     bracket = symbolStack.top();
     symbolStack.pop();
-    // here no empty check
-    
-    dynamic_cast<FunctionSymbol *>(symbolStack.top())->getArgumentCount();
     
     symbolStack.push(bracket);
   }
+   
+  void Compiler::processOperator(char c) {
+    OperatorSymbol *oper;
+    
+    oper = new OperatorSymbol();
+    oper->appendChar(c);
+    oper->operatorType = UNARY_POSTFIX;
+    if(prevSymbolType == OPERATOR || prevSymbolType == BRACKET) {
+      oper->operatorType = UNARY_PREFIX;
+    }
+    
+    currentSymbol = oper;
+  }
   
       
-  void Compiler::processSuspendedSymbols(void) {
-    OperatorSymbol *os = dynamic_cast<OperatorSymbol *>(currentSymbol);
-    while(!symbolStack.empty() && (*os << *dynamic_cast<OperatorSymbol *>(symbolStack.top()))) {
+  void Compiler::processSuspendedSymbols(OperatorSymbol *oper) {
+    /* kill dash nine brain */ 
+    while( !symbolStack.empty() && 
+           (
+             ( 
+               symbolStack.top()->getType() == OPERATOR && 
+               *oper << *dynamic_cast<OperatorSymbol *>(symbolStack.top())
+             ) ||
+             symbolStack.top()->getType() == FUNCTION
+           )  
+          ) {
       executeSymbol(symbolStack.top());
       symbolStack.pop();
     }
   }
   
+  
   void Compiler::executeSymbol(ISymbol *sym) {
     switch(sym->getType()) {
       case FUNCTION:
         executeFunction(dynamic_cast<FunctionSymbol *>(sym));
+        argumentsUpdate(true);
         break;
       case OPERATOR:
         executeOperator(dynamic_cast<OperatorSymbol *>(sym));
+        if(dynamic_cast<OperatorSymbol *>(sym)->operatorType == UNARY_PREFIX) {
+          argumentsUpdate(true);
+        }
         break;
       case NUMBER:
       case STRING:
         exprStack.push(exprFactory.createExpression(*sym));
+        argumentsUpdate(false);
         break;
       default:
         // throw some exception here
@@ -276,16 +289,55 @@ namespace StackCompiler {
   }
   
   void Compiler::executeOperator(OperatorSymbol *sym) {
-    IExpression *left, *right;
+    IExpression *left, *right, *result;
     
-    // TODO UNITARY OPERATOR PROCESS
-    
-    right = exprStack.top();
-    symbolStack.pop();
-    left = exprStack.top();
-    symbolStack.pop();
+    if(sym->operatorType == BINARY) {
+      right = exprStack.top();
+      exprStack.pop();
+      left = exprStack.top();
+      exprStack.pop();
+      result = exprFactory.createBinaryOperator(*sym, left, right);
+    } else {
+      right = exprStack.top();
+      exprStack.pop();
+      result = exprFactory.createUnaryOperator(*sym, sym->operatorType, right);
+    }
         
-    exprStack.push(exprFactory.createBinaryOperator(*sym, left, right));
+    exprStack.push(result);
+  }
+  
+  void Compiler::pushOperator(void) {
+    OperatorSymbol *oper = dynamic_cast<OperatorSymbol *>(currentSymbol);
+    
+    oper->priority = symbolDBAdapter.getPriority(oper->getString());
+    oper->associativity = symbolDBAdapter.getAssociativity(currentSymbol->getString());
+    processSuspendedSymbols(oper);
+    
+    symbolStack.push(currentSymbol);
+  }
+  
+  void Compiler::argumentsUpdate(bool top_skip) {
+    ISymbol *sym, *bracket;
+    
+    if(top_skip) {
+      sym = symbolStack.top();
+      symbolStack.pop();
+    }
+    
+    if(!symbolStack.empty()) {
+      if(symbolStack.top()->getType() == BRACKET) {
+        bracket = symbolStack.top();
+        symbolStack.pop();
+        dynamic_cast<FunctionSymbol *>(symbolStack.top())->addArgument();
+        symbolStack.push(bracket);
+      } else if(symbolStack.top()->getType() == OPERATOR) {
+        dynamic_cast<OperatorSymbol *>(symbolStack.top())->addArgument();
+      }
+    }
+    
+    if(top_skip) {  
+      symbolStack.push(sym);
+    }
   }
   
  /*
@@ -327,7 +379,7 @@ namespace StackCompiler {
     return NULL;
   }
       
-  IExpression *IExpressionFactory::createUnitaryOperator(ISymbol sym, IExpression *child) {
+  IExpression *IExpressionFactory::createUnaryOperator(ISymbol sym, OperatorType type, IExpression *child) {
     return NULL;
   }
   IExpression *IExpressionFactory::createBinaryOperator(ISymbol sym, IExpression *left, IExpression *right) {

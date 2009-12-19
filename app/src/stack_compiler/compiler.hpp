@@ -24,6 +24,7 @@ namespace StackCompiler {
     private:
       stack<ISymbol *> symbolStack;
       stack<IExpression *> exprStack;
+      SymbolType prevSymbolType;
       
       ISymbol *currentSymbol;
       unsigned int charIndex;
@@ -41,12 +42,17 @@ namespace StackCompiler {
       
       void processArgSeparator(char c);
       
-      void processSuspendedSymbols(void);
+      void processOperator(char c);
+      
+      void processSuspendedSymbols(OperatorSymbol *oper);
+      
+      void pushOperator(void);
       
       void executeSymbol(ISymbol *sym);
       void executeFunction(FunctionSymbol *sym);
       void executeOperator(OperatorSymbol *sym);
       
+      void argumentsUpdate(bool top_skip);
   };
   
   class IExpression {
@@ -72,7 +78,7 @@ namespace StackCompiler {
     public:
       virtual IExpression *createExpression(ISymbol sym);
       
-      virtual IExpression *createUnitaryOperator(ISymbol sym, IExpression *child);
+      virtual IExpression *createUnaryOperator(ISymbol sym, OperatorType type, IExpression *child);
       virtual IExpression *createBinaryOperator(ISymbol sym, IExpression *left, IExpression *right);
       
       virtual IExpression *createFunction(ISymbol sym);

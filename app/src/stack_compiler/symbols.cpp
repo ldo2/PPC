@@ -80,10 +80,16 @@ namespace StackCompiler {
 
   OperatorSymbol::OperatorSymbol(SymbolType _type) : ISymbol(_type) {}
 
-  OperatorSymbol::OperatorSymbol() : ISymbol(OPERATOR)  {}
+  OperatorSymbol::OperatorSymbol() : ISymbol(OPERATOR), operatorType(BINARY)  {}
       
   bool OperatorSymbol::canAppendChar(char c) {
     return Compiler::charType(c) == OPERATOR_CHAR;
+  }
+
+  void OperatorSymbol::addArgument(void) {
+    if(operatorType == UNARY_POSTFIX) { 
+      operatorType = BINARY;
+    }
   }
 
   bool operator<<(const OperatorSymbol& a, const OperatorSymbol& b) {
