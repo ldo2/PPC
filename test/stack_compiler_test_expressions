@@ -1,0 +1,12 @@
+rpn a
+rpn a()
+rpn 5
+rpn sin(a)
+rpn a() + b
+rpn a+b
+rpn sin(a+b*(d+g))+5
+rpn a(b+ c, g**a*c) 
+rpn -a
+rpn sin(-a)
+rpn sin(-a-b)
+
