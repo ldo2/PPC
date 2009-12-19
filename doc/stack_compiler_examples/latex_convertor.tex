@@ -1,0 +1,307 @@
+\documentclass[12pt]{amsart}
+\usepackage{anysize,amssymb,amsmath,verbatim,epsfig,graphics,array,longtable}
+\usepackage[unicode]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+
+\begin{document}
+
+\section*{Преодразователь в \LaTeX-формулы}
+
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{|c|c|c|}
+  \caption[Преобразования операторов.]{Преобразования операторов.}
+  \\
+    \hline
+
+    Оператор & \LaTeX-выражение & \LaTeX-представление\\
+    \endfirsthead
+    
+    \hline
+    {\verb = } & {\verb = } & ${=}$
+    \\
+    \hline
+    {\verb := } & {\verb := } & ${:=}$
+    \\
+    \hline
+    {\verb =: } & {\verb =: } & ${=:}$
+    \\
+    \hline
+    {\verb + } & {\verb + } & ${+}$
+    \\
+    \hline
+    {\verb - } & {\verb - } & ${-}$
+    \\
+    \hline
+    {\verb * } & {\verb \ast } & ${\ast}$
+    \\
+    \hline
+    {\verb / } & {\verb \frac{}{} } & ${\frac{expr1}{expr2}}$
+    \\
+    \hline
+    {\verb % } & {\verb \% } & ${\%}$
+    \\
+    \hline
+    {\verb ? } & {\verb ? } & ${?}$
+    \\
+    \hline
+    {\verb ! } & {\verb ! } & ${!}$
+    \\
+    \hline
+    {\verb ~ } & {\verb \sim } & ${\sim}$
+    \\
+    \hline
+    {\verb ' } & {\verb \prime } & ${\prime}$
+    \\
+    \hline
+    {\verb ^ } & {\verb \textasciicircum } & ${\textasciicircum}$
+    \\
+    \hline
+    {\verb & } & {\verb \& } & ${\&}$
+    \\
+    \hline
+    {\verb | } & {\verb | } & ${|}$
+    \\
+    \hline
+    {\verb \ } & {\verb \backslash } & ${\backslash}$
+    \\
+    \hline
+    {\verb # } & {\verb \# } & ${\#}$
+    \\
+    \hline
+    {\verb $ } & {\verb \$ } & ${\$}$ 
+    \\
+    \hline
+    {\verb && } & {\verb \&\& } & ${\&\&}$
+    \\
+    \hline
+    {\verb || } & {\verb || } & ${||}$
+    \\
+    \hline
+    {\verb **  } & {\verb {}^{} } & ${expr1}^{expr2}$
+    \\
+    \hline
+    {\verb -> } & {\verb \to } & ${\to}$
+    \\
+    \hline
+    {\verb <- } & {\verb \gets } & ${\gets}$
+    \\
+    \hline
+    {\verb --> } & {\verb \longrightarrow } & ${\longrightarrow}$
+    \\
+    \hline
+    {\verb <-- } & {\verb \longleftarrow } & ${\longleftarrow}$
+    \\
+    \hline
+    {\verb => } & {\verb \Rightarrow } & ${\Rightarrow}$
+    \\
+    \hline
+    {\verb <=> } & {\verb \Leftrightarrow } & ${\Leftrightarrow}$
+    \\
+    \hline
+    {\verb > } & {\verb > } & ${>}$
+    \\
+    \hline
+    {\verb >=  } & {\verb \geqslant } & $\geqslant$
+    \\
+    \hline
+    {\verb <  } & {\verb < } & $<$
+    \\
+    \hline
+    {\verb <=  } & {\verb \leqslant } & $\leqslant$
+    \\
+    \hline
+    {\verb +-  } & {\verb \pm } & $\pm$
+    \\
+    \hline
+    {\verb ++  } & {\verb ++ } & $++$
+    \\
+    \hline
+    {\verb !=  } & {\verb \neq } & $\neq$
+    \\
+    \hline
+    {\verb ~=  } & {\verb \simeq } & $\simeq$
+    \\
+    \hline
+    {\verb ===  } & {\verb \equiv } & $\equiv$
+    \\
+    \hline
+    {\verb <<  } & {\verb \ll } & $\ll$
+    \\
+    \hline
+    {\verb >>  } & {\verb \gg } & $\gg$
+    \\
+    \hline
+    {\verb \/  } & {\verb \lor } & $\lor$
+    \\
+    \hline
+    {\verb /\  } & {\verb \land } & $\land$
+    \\
+    \hline
+    \hline
+\end{longtable}
+
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{|c|c|c|}
+  \caption[Преобразования функций.]{Преобразования функций.}
+  \\
+    \hline
+
+    Функция & \LaTeX-выражение & \LaTeX-представление\\
+    \endfirsthead
+    
+    \hline
+    {\verb alpha } & {\verb \alpha } & ${\alpha}$
+    \\
+    \hline
+    {\verb beta } & {\verb \beta } & ${\beta}$
+    \\
+    \hline
+    {\verb gamma } & {\verb \gamma } & ${\gamma}$
+    \\
+    \hline
+    {\verb delta } & {\verb \delta } & ${\delta}$
+    \\
+    \hline
+    {\verb epsilon } & {\verb \varepsilon } & ${\varepsilon}$
+    \\
+    \hline
+    {\verb zeta } & {\verb \zeta } & ${\zeta}$
+    \\
+    \hline
+    {\verb eta } & {\verb \eta } & ${\eta}$
+    \\
+    \hline
+    {\verb theta } & {\verb \theta } & ${\theta}$
+    \\
+    \hline
+    {\verb iota } & {\verb \iota } & ${\iota}$
+    \\
+    \hline
+    {\verb kappa } & {\verb \kappa } & ${\kappa}$
+    \\
+    \hline
+    {\verb lambda } & {\verb \lambda } & ${\lambda}$
+    \\
+    \hline
+    {\verb mu } & {\verb \mu } & ${\mu}$
+    \\
+    \hline
+    {\verb nu } & {\verb \nu } & ${\nu}$
+    \\
+    \hline
+    {\verb xi } & {\verb \xi } & ${\xi}$
+    \\
+    \hline
+    {\verb pi } & {\verb \pi } & ${\pi}$
+    \\
+    \hline
+    {\verb rho } & {\verb \rho } & ${\rho}$
+    \\
+    \hline
+    {\verb sigma } & {\verb \sigma } & ${\sigma}$
+    \\
+    \hline
+    {\verb tau } & {\verb \tau } & ${\tau}$
+    \\
+    \hline
+    {\verb upsilon } & {\verb \upsilon } & ${\upsilon}$
+    \\
+    \hline
+    {\verb phi } & {\verb \varphi } & ${\varphi}$
+    \\
+    \hline
+    {\verb chi } & {\verb \chi } & ${\chi}$
+    \\
+    \hline
+    {\verb psi } & {\verb \psi } & ${\psi}$
+    \\
+    \hline
+    {\verb omega } & {\verb \omega } & ${\omega}$
+    \\
+    \hline
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    {\verb aleph } & {\verb \aleph } & ${\aleph}$
+    \\
+    \hline
+    {\verb Re } & {\verb \Re } & ${\Re}$
+    \\
+    \hline
+    {\verb Im } & {\verb \Im } & ${\Im}$
+    \\
+    \hline
+    {\verb infty } & {\verb \infty } & ${\infty}$
+    \\
+    \hline
+    {\verb infinity } & {\verb \infty } & ${\infty}$
+    \\
+    \hline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    {\verb sin } & {\verb \sin } & ${\sin}$
+    \\
+    \hline
+    {\verb cos } & {\verb \cos } & ${\cos}$
+    \\
+    \hline
+    {\verb tg } & {\verb \tg } & ${\tg}$
+    \\
+    \hline
+    {\verb tan } & {\verb \tan } & ${\tan}$
+    \\
+    \hline
+    {\verb arcsin } & {\verb \arcsin } & ${\arcsin}$
+    \\
+    \hline
+    {\verb arccos } & {\verb \arccos } & ${\arccos}$
+    \\
+    \hline
+    {\verb arctg } & {\verb \arctg } & ${\arctg}$
+    \\
+    \hline
+    {\verb arctan } & {\verb \arctan } & ${\arctan}$
+    \\
+    \hline
+    {\verb sh } & {\verb \sh } & ${\sh}$
+    \\
+    \hline
+    {\verb ch } & {\verb \ch } & ${\ch}$
+    \\
+    \hline
+    {\verb th } & {\verb \th } & ${\th}$
+    \\
+    \hline
+    {\verb e } & {\verb e } & ${e}$
+    \\
+    \hline
+    {\verb exp } & {\verb \exp } & ${\exp}$
+    \\
+    \hline
+    {\verb ln } & {\verb \ln } & ${\ln}$
+    \\
+    \hline
+    {\verb lg } & {\verb \lg } & ${\lg}$
+    \\
+    \hline
+    {\verb log } & {\verb \log } & ${\log}$
+    \\
+    \hline
+    {\verb sqrt } & {\verb \sqrt{} } & ${\sqrt{expr}}$
+    \\
+    \hline
+    {\verb crt } & {\verb \sqrt[3]{} } & ${\sqrt[3]{expr}}$
+    \\
+    \hline
+    {\verb abs } & {\verb \left|\right| } & ${\left|expr\right|}$
+    \\
+    \hline
+    {\verb int } & {\verb \left[\right] } & ${\left[ expr \right]}$
+    \\
+    \hline
+
+\end{longtable}
+
+\end{document}
+
+\endinput
