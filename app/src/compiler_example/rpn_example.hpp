@@ -17,7 +17,6 @@ class RPNExpression : public IExpression {
     
       RPNExpression(void);
       RPNExpression(string _str);
-     // RPNExpression(string& _str);
       virtual ~RPNExpression(void);
       
       friend ostream& operator << (ostream& os, RPNExpression *e);
@@ -26,16 +25,18 @@ class RPNExpression : public IExpression {
 };
 
 class RPNExpressionFactory : public IExpressionFactory {
+    private: 
+      bool trace;
     public:
       RPNExpressionFactory(void);
+      RPNExpressionFactory(bool _trace);
       
       virtual IExpression *createExpression(ISymbol sym);
       
-      virtual IExpression *createUnitaryOperator(ISymbol sym, IExpression *child);
+      virtual IExpression *createUnaryOperator(ISymbol sym, OperatorType type, IExpression *child);
       virtual IExpression *createBinaryOperator(ISymbol sym, IExpression *left, IExpression *right);
       
       virtual IExpression *createFunction(ISymbol sym);
-      // virtual IExpression *createFunction(ISymbol sym, int argc, IExpression args[]);
       
       virtual void reverseAddSubExpression(IExpression *parent, IExpression *child);
 };

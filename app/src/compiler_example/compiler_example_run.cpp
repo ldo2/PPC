@@ -8,9 +8,9 @@
 
 using namespace std;
 
-void call_rpn(void) {
+void call_rpn(bool trace) {
   RPNSymbolDBAdapter dbAdapter;
-  RPNExpressionFactory expFactory;
+  RPNExpressionFactory expFactory(trace);
   Compiler cc(dbAdapter, expFactory);
   
   char buffer[EXPBUF_SIZE];
@@ -30,6 +30,7 @@ void call_rpn(void) {
 void print_help() {
   cout << "help:" << endl;
   cout << "\trpn <expression>" << endl;
+  cout << "\ttracerpn <expression>" << endl;
   cout << "\thelp" << endl;
   cout << "\texit" << endl;
 }
@@ -43,7 +44,9 @@ int main(void) {
       cin >> command;
     
       if("rpn" == command) {
-        call_rpn();
+        call_rpn(false);
+      } else if("tracerpn" == command) {
+        call_rpn(true);
       } else if("help" == command) {
         print_help();
       } else if("exit" == command) {

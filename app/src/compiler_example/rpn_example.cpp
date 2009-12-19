@@ -6,17 +6,8 @@
  */
        
   RPNExpression::RPNExpression() {}
-  RPNExpression::RPNExpression(string _str) : str(_str) { 
-    cout << "create RPNExpression: " << str << endl; 
-  }
-  //RPNExpression::RPNExpression(string& _str) : str(_str) {}
+  RPNExpression::RPNExpression(string _str) : str(_str) {}
   RPNExpression::~RPNExpression(void) {}
-  
-  /*
-  ostream& operator << (ostream& os, RPNExpression *e) {
-    os << e->str;
-  }
-  */
 
 /*
  * end of RPNExpression class
@@ -26,19 +17,34 @@
  * class RPNExpressionFactory implementation
  */
 
-  RPNExpressionFactory::RPNExpressionFactory(void) {}
+  RPNExpressionFactory::RPNExpressionFactory(void) : trace(false) {}
+  RPNExpressionFactory::RPNExpressionFactory(bool _trace) : trace(_trace) {}
       
   IExpression *RPNExpressionFactory::createExpression(ISymbol sym) {
+    if(trace) {
+      cout << "RPNEF: createExpression for \"" << sym.getString() << "\"" << endl;
+    }
     return new RPNExpression(sym.getString());
   }
       
-  IExpression *RPNExpressionFactory::createUnitaryOperator(ISymbol sym, IExpression *child) {
+  IExpression *RPNExpressionFactory::createUnaryOperator(ISymbol sym, OperatorType type, IExpression *child) {
+    if(trace) {
+      cout << "RPNEF: createUnaryOperator \"" << sym.getString() << "\" ";
+      cout << "mode: " << (type == UNARY_POSTFIX ? "postfix" : "prefix") << " ";
+      cout << "for \"" << dynamic_cast<RPNExpression *>(child)->str << "\"" << endl;
+    }
+    
     RPNExpression *result = new RPNExpression(dynamic_cast<RPNExpression *>(child)->str + " " + sym.getString());
     delete child;
     return result;
   }
   
   IExpression *RPNExpressionFactory::createBinaryOperator(ISymbol sym, IExpression *left, IExpression *right) {
+    if(trace) {
+      cout << "RPNEF: createBinaryOperator \"" << sym.getString() << "\" ";
+      cout << "for \"" << dynamic_cast<RPNExpression *>(left)->str << "\" ";
+      cout << "and \"" << dynamic_cast<RPNExpression *>(right)->str << "\"" << endl;
+    }
     RPNExpression *result = new RPNExpression(dynamic_cast<RPNExpression *>(left)->str + " " + dynamic_cast<RPNExpression *>(right)->str + " " + sym.getString());
     
     delete left;
@@ -48,12 +54,20 @@
   }
       
   IExpression *RPNExpressionFactory::createFunction(ISymbol sym) {
+    if(trace) {
+      cout <<"RPNEF: createFunction \"" << sym.getString() << "\"" << endl;
+    }
     return new RPNExpression(sym.getString());
   }
       
   void RPNExpressionFactory::reverseAddSubExpression(IExpression *parent, IExpression *child) {
     RPNExpression *p = dynamic_cast<RPNExpression *>(parent);
     RPNExpression *c = dynamic_cast<RPNExpression *>(child);
+    
+    if(trace) {
+      cout << "RPNEF: reverseAddSubExpression \"" << c->str << "\" ";
+      cout << "to \"" << p->str << "\"" << endl;
+    }
     
     p->str = c->str + " " + p->str;
      
